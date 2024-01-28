@@ -2,7 +2,8 @@ import { ModeToggle } from "./mode-toggle";
 import { useState, useEffect } from "react";
 import Tasks from "./tasks";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+
 const LandingPage = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   useEffect(() => {
@@ -20,6 +21,14 @@ const LandingPage = () => {
     "Friday",
     "Saturday",
   ];
+
+  const [taskList, setTaskList] = useState<string[]>([]);
+  const [task, setTask] = useState<string>("");
+
+  const handleAdd = () => {
+    setTaskList((prevTask) => [...prevTask, task]);
+    setTask("");
+  };
   return (
     <div className=" items-center landing-page w-full h-full">
       <div className="flex justify-end pt-1 pr-1">
@@ -30,10 +39,16 @@ const LandingPage = () => {
           <h1>Day: {daysOfWeek[currentTime.getDay()]}</h1>
           <h1>Current Time: {currentTime.toLocaleTimeString()}</h1>
         </div>
-        <Tasks />
-        <div className="mt-3 grid w-1/2 gap-2">
-          <Textarea className="h-px" placeholder="Enter your tasks" />
-          <Button>Add</Button>
+        <Tasks taskList={taskList} />
+        <div className="flex mt-4  w-1/2 space-x-2">
+          <Input
+            onChange={(e) => {
+              setTask(e.target.value);
+            }}
+            value={task}
+            placeholder="Enter your tasks"
+          />
+          <Button onClick={handleAdd}>Add</Button>
         </div>
       </div>
     </div>
