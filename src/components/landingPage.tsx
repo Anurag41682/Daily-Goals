@@ -25,7 +25,13 @@ const LandingPage = () => {
   const [taskList, setTaskList] = useState<string[]>([]);
   const [task, setTask] = useState<string>("");
 
-  const handleAdd = () => {
+  const handleKeyAdd = (e: React.KeyboardEvent<any>) => {
+    if (e.key === "Enter") {
+      setTaskList((prevTask) => [...prevTask, task]);
+      setTask("");
+    }
+  };
+  const handleClickAdd = () => {
     setTaskList((prevTask) => [...prevTask, task]);
     setTask("");
   };
@@ -45,10 +51,11 @@ const LandingPage = () => {
             onChange={(e) => {
               setTask(e.target.value);
             }}
+            onKeyDown={handleKeyAdd}
             value={task}
             placeholder="Enter your tasks"
           />
-          <Button onClick={handleAdd}>Add</Button>
+          <Button onClick={handleClickAdd}>Add</Button>
         </div>
       </div>
     </div>
