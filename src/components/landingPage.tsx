@@ -42,8 +42,8 @@ const LandingPage = () => {
       </div>
       <div className="w-full h-5/6 flex flex-col font-bold text-lg justify-start items-center">
         <div className="flex flex-col justify-center items-center">
-          <h1>Day: {daysOfWeek[currentTime.getDay()]}</h1>
-          <h1>Current Time: {currentTime.toLocaleTimeString()}</h1>
+          <h1>{daysOfWeek[currentTime.getDay()]}</h1>
+          <h1>{currentTime.toLocaleTimeString()}</h1>
         </div>
         <Tasks taskList={taskList} />
         <div className="flex mt-4  w-1/2 space-x-2">
