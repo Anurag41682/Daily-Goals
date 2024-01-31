@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
+window.ipcRenderer = require('electron').ipcRenderer;
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
 

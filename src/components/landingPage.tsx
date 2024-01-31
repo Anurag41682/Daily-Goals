@@ -4,6 +4,8 @@ import Tasks from "./tasks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+const ipcRenderer = window.ipcRenderer;
+
 const LandingPage = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   useEffect(() => {
@@ -24,9 +26,14 @@ const LandingPage = () => {
 
   const [taskList, setTaskList] = useState<string[]>([]);
   const [task, setTask] = useState<string>("");
-
+  useEffect(() => {
+    ipcRenderer.on("add", (event, resData) => {
+      console.log(resData);
+    });
+  }, []);
   const handleKeyAdd = (e: React.KeyboardEvent<any>) => {
     if (e.key === "Enter") {
+      ipcRenderer.send("add", { data: task });
       setTaskList((prevTask) => [...prevTask, task]);
       setTask("");
     }

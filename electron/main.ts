@@ -1,5 +1,15 @@
 import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
+import { ipcMain } from 'electron'
+
+
+ipcMain.on('add', (event, requestData) => {
+  // Perform backend logic or make requests to external services
+  const responseData = { data:requestData };
+
+  // Send the response back to the renderer process
+  event.sender.send('add', responseData);
+});
 
 // The built directory structure
 //
