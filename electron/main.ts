@@ -1,15 +1,7 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
-import { ipcMain } from 'electron'
 
-
-ipcMain.on('add', (event, requestData) => {
-  // Perform backend logic or make requests to external services
-  const responseData = { data:requestData };
-
-  // Send the response back to the renderer process
-  event.sender.send('add', responseData);
-});
+import "./Routes/add"
 
 // The built directory structure
 //
@@ -36,6 +28,13 @@ function createWindow() {
     },
     autoHideMenuBar: true, //hide menubar
   })
+
+  ipcMain.on("navigate",(event,route)=>{
+    if(route.action==="add"){
+      ipcMain.emit("add", event, route.data);
+    }
+  })
+
 
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
@@ -69,3 +68,5 @@ app.on('activate', () => {
 })
 
 app.whenReady().then(createWindow)
+
+
