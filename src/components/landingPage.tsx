@@ -27,18 +27,30 @@ const LandingPage = () => {
   const [taskList, setTaskList] = useState<string[]>([]);
   const [task, setTask] = useState<string>("");
   useEffect(() => {
-    ipcRenderer.on("add", (event, resData) => {
-      console.log(resData);
-    });
+    //made request at fetch route
+    ipcRenderer.send("fetch");
+
+    const handleTasksFetched = (event: any, fetchedTasks: string[]) => {
+      setTaskList(fetchedTasks);
+    };
+
+    //listener for what is recieved from that route
+    ipcRenderer.on("fetch", handleTasksFetched);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      ipcRenderer.removeListener("fetch", handleTasksFetched);
+    };
   }, []);
   const handleKeyAdd = (e: React.KeyboardEvent<any>) => {
     if (e.key === "Enter") {
-      ipcRenderer.send("add", { data: task });
+      ipcRenderer.send("add", { task: task });
       setTaskList((prevTask) => [...prevTask, task]);
       setTask("");
     }
   };
   const handleClickAdd = () => {
+    ipcRenderer.send("add", { task: task });
     setTaskList((prevTask) => [...prevTask, task]);
     setTask("");
   };
