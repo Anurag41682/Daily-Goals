@@ -54,6 +54,10 @@ const LandingPage = () => {
     setTaskList((prevTask) => [...prevTask, task]);
     setTask("");
   };
+  const handleClearAll = () => {
+    ipcRenderer.send("clear");
+    setTaskList([]);
+  };
   return (
     <div className=" items-center landing-page w-full h-full">
       <div className="flex justify-end pt-1 pr-1">
@@ -65,7 +69,7 @@ const LandingPage = () => {
           <h1>{currentTime.toLocaleTimeString()}</h1>
         </div>
         <Tasks taskList={taskList} />
-        <div className="flex mt-4  w-1/2 space-x-2">
+        <div className="flex mt-4  w-3/4 space-x-2">
           <Input
             onChange={(e) => {
               setTask(e.target.value);
@@ -75,6 +79,7 @@ const LandingPage = () => {
             placeholder="Enter your tasks"
           />
           <Button onClick={handleClickAdd}>Add</Button>
+          <Button onClick={handleClearAll}>Clear</Button>
         </div>
       </div>
     </div>

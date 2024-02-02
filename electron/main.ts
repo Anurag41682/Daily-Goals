@@ -3,6 +3,7 @@ import path from "node:path";
 
 import "./routes/add";
 import "./routes/fetch";
+import "./routes/clear";
 // import "./models/dbManager";
 // The built directory structure
 //
@@ -30,12 +31,13 @@ function createWindow() {
     },
     autoHideMenuBar: true, //hide menubar
   });
-
   ipcMain.on("navigate", (event, route) => {
     if (route.action === "add") {
       ipcMain.emit("add", event, route.data);
     } else if (route.action === "fetch") {
       ipcMain.emit("fetch", event, route.data);
+    } else if (route.action === "clear") {
+      ipcMain.emit("clear", event, route.data);
     }
   });
 

@@ -2,8 +2,7 @@ import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { EditIcon } from "lucide-react";
-
+import { DeleteIcon, EditIcon } from "lucide-react";
 interface taskProps {
   taskList: string[];
 }
@@ -19,7 +18,7 @@ const Tasks: React.FC<taskProps> = (props) => {
   };
   return (
     <ScrollArea className="mt-4 h-full w-3/4 rounded-md border p-4">
-      {props.taskList.map((item, idx) => (
+      {props.taskList.map((item: string, idx) => (
         <div key={idx} className=" flex justify-between items-center p-2">
           <div className="space-x-4 flex items-center">
             <Checkbox
@@ -36,10 +35,17 @@ const Tasks: React.FC<taskProps> = (props) => {
               {item}
             </Label>
           </div>
-          <EditIcon
-            onClick={handleEditClick}
-            className="w-5 md:w-6 lg:w-7 h-5 md:h-6 lg:h-7"
-          />
+          <div className="flex space-x-2 justify-center items-center">
+            <button>
+              <DeleteIcon></DeleteIcon>
+            </button>
+            <button>
+              <EditIcon
+                onClick={handleEditClick}
+                className="w-5 md:w-6 lg:w-7 h-5 md:h-6 lg:h-7"
+              />
+            </button>
+          </div>
         </div>
       ))}
     </ScrollArea>

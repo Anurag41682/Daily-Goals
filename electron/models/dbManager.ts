@@ -28,3 +28,13 @@ export const fetchData = (callback: (records: any) => void) => {
     callback(recordsOfString);
   });
 };
+
+export const clearData = () => {
+  const clearQuery = `DELETE FROM myTable`;
+  db.run(clearQuery, [], (err: Error | null) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
+};
