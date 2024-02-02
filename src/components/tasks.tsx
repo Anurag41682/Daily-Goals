@@ -37,7 +37,7 @@ const Tasks: React.FC<taskProps> = (props) => {
           </div>
           <div className="flex space-x-2 justify-center items-center">
             <button>
-              <DeleteIcon></DeleteIcon>
+              <DeleteIcon className="w-5 md:w-6 lg:w-7 h-5 md:h-6 lg:h-7"></DeleteIcon>
             </button>
             <button>
               <EditIcon
