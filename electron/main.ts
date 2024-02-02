@@ -4,6 +4,7 @@ import path from "node:path";
 import "./routes/add";
 import "./routes/fetch";
 import "./routes/clear";
+import "./routes/mark-unmark";
 // import "./models/dbManager";
 // The built directory structure
 //
@@ -38,6 +39,8 @@ function createWindow() {
       ipcMain.emit("fetch", event, route.data);
     } else if (route.action === "clear") {
       ipcMain.emit("clear", event, route.data);
+    } else if (route.action === "mark-unmark") {
+      ipcMain.emit("mark-unmark", event, route.data);
     }
   });
 

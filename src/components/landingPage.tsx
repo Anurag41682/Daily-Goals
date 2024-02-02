@@ -23,36 +23,46 @@ const LandingPage = () => {
     "Friday",
     "Saturday",
   ];
-
-  const [taskList, setTaskList] = useState<string[]>([]);
+  interface taskData {
+    id: string;
+    task: string;
+    isMarked: boolean;
+  }
+  const [taskList, setTaskList] = useState<taskData[]>([]);
   const [task, setTask] = useState<string>("");
   useEffect(() => {
     //made request at fetch route
     ipcRenderer.send("fetch");
 
-    const handleTasksFetched = (event: any, fetchedTasks: string[]) => {
+    const handleTasksFetched = (event: any, fetchedTasks: taskData[]) => {
       setTaskList(fetchedTasks);
     };
 
     //listener for what is recieved from that route
     ipcRenderer.on("fetch", handleTasksFetched);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      ipcRenderer.removeListener("fetch", handleTasksFetched);
+  }, []);
+  useEffect(() => {
+    const handleAddEvent = (event: any, receviedData: taskData) => {
+      setTaskList((prevTask) => [
+        ...prevTask,
+        {
+          id: receviedData.id,
+          task: receviedData.task,
+          isMarked: receviedData.isMarked,
+        },
+      ]);
+      setTask("");
     };
+    ipcRenderer.removeAllListeners("add");
+    ipcRenderer.on("add", handleAddEvent);
   }, []);
   const handleKeyAdd = (e: React.KeyboardEvent<any>) => {
     if (e.key === "Enter") {
-      ipcRenderer.send("add", { task: task });
-      setTaskList((prevTask) => [...prevTask, task]);
-      setTask("");
+      ipcRenderer.send("add", task);
     }
   };
   const handleClickAdd = () => {
-    ipcRenderer.send("add", { task: task });
-    setTaskList((prevTask) => [...prevTask, task]);
-    setTask("");
+    ipcRenderer.send("add", task);
   };
   const handleClearAll = () => {
     ipcRenderer.send("clear");
@@ -68,7 +78,7 @@ const LandingPage = () => {
           <h1>{daysOfWeek[currentTime.getDay()]}</h1>
           <h1>{currentTime.toLocaleTimeString()}</h1>
         </div>
-        <Tasks taskList={taskList} />
+        <Tasks setTaskList={setTaskList} taskList={taskList} />
         <div className="flex mt-4  w-3/4 space-x-2">
           <Input
             onChange={(e) => {

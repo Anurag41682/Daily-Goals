@@ -1,6 +1,9 @@
 import { ipcMain } from "electron";
 import { insertData } from "../models/dbManager";
 
-ipcMain.on("add", (event, requestData: { task: string }) => {
-  insertData(requestData.task);
+ipcMain.on("add", (event, requestData: string) => {
+  insertData(requestData, (err: Error | null, insertedData: any) => {
+    if (err) return err;
+    event.sender.send("add", insertedData);
+  });
 });
