@@ -1,15 +1,20 @@
 const sqlite3 = require("sqlite3");
 const db = new sqlite3.Database("./electron/models/tasks.db");
 
-db.run(`CREATE TABLE IF NOT EXISTS myTable(task String)`);
+db.run(`CREATE TABLE IF NOT EXISTS myTable(id TEXT ,task TEXT)`);
+
+function generateUniqueId() {
+  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
 
 export const insertData = (task: string) => {
+  const id = generateUniqueId();
   const insertQuery = `
-    INSERT INTO myTable (task)
-    VALUES (?)
+    INSERT INTO myTable (id, task)
+    VALUES (?,?)
   `;
 
-  db.run(insertQuery, [task], function (err: Error | null) {
+  db.run(insertQuery, [id, task], function (err: Error | null) {
     if (err) {
       console.error(err.message);
       return;
