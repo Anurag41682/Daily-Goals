@@ -18,6 +18,11 @@ const Tasks: React.FC<taskProps> = (props) => {
   const handleEditClick = () => {
     console.log("Clicked");
   };
+  const handleDeleteClick = (id: string) => {
+    ipcRenderer.send("delete", id);
+    const updatedList = props.taskList.filter((item) => item.id !== id);
+    props.setTaskList(updatedList);
+  };
   const handleCheckboxChange = (id: string) => {
     ipcRenderer.send("mark-unmark", id);
     const updatedList = props.taskList.map((item) =>
@@ -48,7 +53,12 @@ const Tasks: React.FC<taskProps> = (props) => {
           </div>
           <div className="flex space-x-2 justify-center items-center">
             <button>
-              <DeleteIcon className="w-5 md:w-6 lg:w-7 h-5 md:h-6 lg:h-7"></DeleteIcon>
+              <DeleteIcon
+                onClick={() => {
+                  handleDeleteClick(item.id);
+                }}
+                className="w-5 md:w-6 lg:w-7 h-5 md:h-6 lg:h-7"
+              ></DeleteIcon>
             </button>
             <button>
               <EditIcon

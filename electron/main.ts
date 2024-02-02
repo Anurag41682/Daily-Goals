@@ -5,6 +5,7 @@ import "./routes/add";
 import "./routes/fetch";
 import "./routes/clear";
 import "./routes/mark-unmark";
+import "./routes/delete";
 // import "./models/dbManager";
 // The built directory structure
 //
@@ -41,6 +42,8 @@ function createWindow() {
       ipcMain.emit("clear", event, route.data);
     } else if (route.action === "mark-unmark") {
       ipcMain.emit("mark-unmark", event, route.data);
+    } else if (route.action === "delete") {
+      ipcMain.emit("delete", event, route.data);
     }
   });
 

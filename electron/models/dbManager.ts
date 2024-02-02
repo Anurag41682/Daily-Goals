@@ -56,3 +56,13 @@ export const markUnmark = (id: string) => {
     }
   });
 };
+
+export const deleteData = (id: string) => {
+  const deleteQuery = "DELETE FROM myTable WHERE id = ?";
+  db.run(deleteQuery, [id], (err: Error | null) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
+};
