@@ -40,7 +40,11 @@ const Tasks: React.FC<taskProps> = (props) => {
     );
     props.setTaskList(updatedList);
   };
-  return (
+  return props.taskList.length === 0 ? (
+    <div className="flex justify-center items-center mt-4 h-full w-3/4 rounded-md border p-4">
+      No data to show
+    </div>
+  ) : (
     <ScrollArea className="mt-4 h-full w-3/4 rounded-md border p-4">
       {props.taskList.map((item: taskData) => (
         <div key={item.id} className=" flex justify-between items-center p-2">

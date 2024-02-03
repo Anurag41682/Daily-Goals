@@ -99,6 +99,7 @@ const LandingPage = () => {
           <h1>{daysOfWeek[currentTime.getDay()]}</h1>
           <h1>{currentTime.toLocaleTimeString()}</h1>
         </div>
+
         <Tasks
           setTaskList={setTaskList}
           taskList={taskList}
@@ -110,6 +111,7 @@ const LandingPage = () => {
           setIdToUpdate={setIdToUpdate}
           inputRef={inputRef}
         />
+
         <div className="flex mt-4  w-3/4 space-x-2">
           <Input
             onChange={(e) => {
