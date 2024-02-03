@@ -38,6 +38,8 @@ const LandingPage = () => {
     ipcRenderer.send("fetch");
 
     const handleTasksFetched = (event: any, fetchedTasks: taskData[]) => {
+      if (event) {
+      }
       setTaskList(fetchedTasks);
     };
 
@@ -46,6 +48,8 @@ const LandingPage = () => {
   }, []);
   useEffect(() => {
     const handleAddEvent = (event: any, receviedData: taskData) => {
+      if (event) {
+      }
       setTaskList((prevTask) => [
         ...prevTask,
         {
