@@ -30,6 +30,8 @@ const LandingPage = () => {
   }
   const [taskList, setTaskList] = useState<taskData[]>([]);
   const [task, setTask] = useState<string>("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [idToUpdate, setIdToUpdate] = useState(null);
   useEffect(() => {
     //made request at fetch route
     ipcRenderer.send("fetch");
@@ -64,6 +66,24 @@ const LandingPage = () => {
   const handleClickAdd = () => {
     ipcRenderer.send("add", task);
   };
+  const updateEditedComponent = () => {
+    const updatedData = taskList.map((item) =>
+      item.id === idToUpdate ? { ...item, task: task } : item
+    );
+    setTaskList(updatedData);
+    setTask("");
+    setIsEditing(false);
+  };
+  const handleKeyEdit = (e: React.KeyboardEvent<any>) => {
+    if (e.key === "Enter") {
+      ipcRenderer.send("edit", { idToUpdate, task });
+      updateEditedComponent();
+    }
+  };
+  const handleClickEdit = () => {
+    ipcRenderer.send("edit", { idToUpdate, task });
+    updateEditedComponent();
+  };
   const handleClearAll = () => {
     ipcRenderer.send("clear");
     setTaskList([]);
@@ -78,17 +98,28 @@ const LandingPage = () => {
           <h1>{daysOfWeek[currentTime.getDay()]}</h1>
           <h1>{currentTime.toLocaleTimeString()}</h1>
         </div>
-        <Tasks setTaskList={setTaskList} taskList={taskList} />
+        <Tasks
+          setTaskList={setTaskList}
+          taskList={taskList}
+          task={task}
+          setTask={setTask}
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
+          idToUpdate={idToUpdate}
+          setIdToUpdate={setIdToUpdate}
+        />
         <div className="flex mt-4  w-3/4 space-x-2">
           <Input
             onChange={(e) => {
               setTask(e.target.value);
             }}
-            onKeyDown={handleKeyAdd}
+            onKeyDown={isEditing ? handleKeyEdit : handleKeyAdd}
             value={task}
             placeholder="Enter your tasks"
           />
-          <Button onClick={handleClickAdd}>Add</Button>
+          <Button onClick={isEditing ? handleClickEdit : handleClickAdd}>
+            {isEditing ? "Edit" : "Add"}
+          </Button>
           <Button onClick={handleClearAll}>Clear</Button>
         </div>
       </div>

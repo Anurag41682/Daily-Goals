@@ -12,11 +12,19 @@ interface taskData {
 interface taskProps {
   taskList: taskData[];
   setTaskList: any;
+  task: string;
+  setTask: any;
+  isEditing: boolean;
+  setIsEditing: any;
+  idToUpdate: string | null;
+  setIdToUpdate: any;
 }
 
 const Tasks: React.FC<taskProps> = (props) => {
-  const handleEditClick = () => {
-    console.log("Clicked");
+  const handleEditClick = (item: any) => {
+    props.setIsEditing(true);
+    props.setTask(item.task);
+    props.setIdToUpdate(item.id);
   };
   const handleDeleteClick = (id: string) => {
     ipcRenderer.send("delete", id);
@@ -62,7 +70,9 @@ const Tasks: React.FC<taskProps> = (props) => {
             </button>
             <button>
               <EditIcon
-                onClick={handleEditClick}
+                onClick={() => {
+                  handleEditClick(item);
+                }}
                 className="w-5 md:w-6 lg:w-7 h-5 md:h-6 lg:h-7"
               />
             </button>

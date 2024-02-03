@@ -66,3 +66,13 @@ export const deleteData = (id: string) => {
     }
   });
 };
+
+export const editData = (id: string, task: string) => {
+  const editQuery = `UPDATE myTable SET task = ? WHERE id = ?`;
+  db.run(editQuery, [task, id], (err: Error | null) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
+};
