@@ -1,5 +1,5 @@
 import { ModeToggle } from "./mode-toggle";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Tasks from "./tasks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,7 @@ const LandingPage = () => {
   const [task, setTask] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
   const [idToUpdate, setIdToUpdate] = useState(null);
+  const inputRef = useRef(null);
   useEffect(() => {
     //made request at fetch route
     ipcRenderer.send("fetch");
@@ -107,6 +108,7 @@ const LandingPage = () => {
           setIsEditing={setIsEditing}
           idToUpdate={idToUpdate}
           setIdToUpdate={setIdToUpdate}
+          inputRef={inputRef}
         />
         <div className="flex mt-4  w-3/4 space-x-2">
           <Input
@@ -116,6 +118,7 @@ const LandingPage = () => {
             onKeyDown={isEditing ? handleKeyEdit : handleKeyAdd}
             value={task}
             placeholder="Enter your tasks"
+            ref={inputRef}
           />
           <Button onClick={isEditing ? handleClickEdit : handleClickAdd}>
             {isEditing ? "Edit" : "Add"}

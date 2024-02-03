@@ -18,6 +18,7 @@ interface taskProps {
   setIsEditing: any;
   idToUpdate: string | null;
   setIdToUpdate: any;
+  inputRef: any;
 }
 
 const Tasks: React.FC<taskProps> = (props) => {
@@ -25,6 +26,7 @@ const Tasks: React.FC<taskProps> = (props) => {
     props.setIsEditing(true);
     props.setTask(item.task);
     props.setIdToUpdate(item.id);
+    props.inputRef.current.focus();
   };
   const handleDeleteClick = (id: string) => {
     ipcRenderer.send("delete", id);
