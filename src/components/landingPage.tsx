@@ -90,11 +90,11 @@ const LandingPage = () => {
     setTaskList([]);
   };
   return (
-    <div className=" items-center landing-page w-full h-full">
+    <div className=" items-center landing-page w-full h-5/6">
       <div className="flex justify-end pt-1 pr-1">
         <ModeToggle />
       </div>
-      <div className="w-full h-5/6 flex flex-col font-bold text-lg justify-start items-center">
+      <div className="w-full h-full flex flex-col font-bold text-lg justify-start items-center">
         <div className="flex flex-col justify-center items-center">
           <h1>{daysOfWeek[currentTime.getDay()]}</h1>
           <h1>{currentTime.toLocaleTimeString()}</h1>
