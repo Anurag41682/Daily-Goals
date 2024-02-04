@@ -1,11 +1,14 @@
 const fs = require("fs");
-
+const path = require('path');
+const { app } = require('electron');
 interface Task {
   id: string;
   task: string;
   isMarked: boolean;
 }
 let tasks: Task[] = [];
+const userDataPath = app.getPath('userData');
+const filePath = path.join(userDataPath, 'tasks.json');
 
 function generateUniqueId() {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
@@ -13,11 +16,10 @@ function generateUniqueId() {
 
 function updateJsonFile() {
   const jsonString = JSON.stringify(tasks, null, 2);
-  fs.writeFileSync("./tasks.json", jsonString, "utf-8");
+  fs.writeFileSync(filePath, jsonString, "utf-8");
 }
 
-export const fetchData = (callback: any) => {
-  const filePath = "./tasks.json";
+export const fetchData = (callback: any) => { 
   // Check if the file exists
   if (fs.existsSync(filePath)) {
     const jsonContent = fs.readFileSync(filePath, "utf-8");
