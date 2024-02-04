@@ -1,78 +1,71 @@
-const sqlite3 = require("sqlite3");
-const db = new sqlite3.Database("./electron/models/tasks.db");
+const fs = require("fs");
 
-db.run(
-  `CREATE TABLE IF NOT EXISTS myTable(id TEXT ,task TEXT ,isMarked INTEGER)`
-);
+interface Task {
+  id: string;
+  task: string;
+  isMarked: boolean;
+}
+let tasks: Task[] = [];
 
 function generateUniqueId() {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
 
-export const insertData = (task: string, callback: any) => {
-  const id = generateUniqueId();
-  const isMarked = false;
-  const insertQuery = `
-    INSERT INTO myTable (id, task, isMarked)
-    VALUES (?,?,?)
-  `;
+function updateJsonFile() {
+  const jsonString = JSON.stringify(tasks, null, 2);
+  fs.writeFileSync("./electron/models/tasks.json", jsonString, "utf-8");
+}
 
-  db.run(insertQuery, [id, task, isMarked], function (err: Error | null) {
-    if (err) {
-      console.error(err.message);
-      return;
-    }
-    callback(null, { id, task, isMarked });
-  });
+export const fetchData = (callback: any) => {
+  const filePath = "./electron/models/tasks.json";
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    const jsonContent = fs.readFileSync(filePath, "utf-8");
+    tasks = JSON.parse(jsonContent);
+    callback(tasks);
+  } else {
+    // If the file doesn't exist, create it with an empty array
+    fs.writeFileSync(filePath, "[]", "utf-8");
+    tasks = [];
+    callback(tasks);
+  }
 };
 
-export const fetchData = (callback: (records: any) => void) => {
-  const fetchQuery = `SELECT * FROM myTable`;
-  db.all(fetchQuery, [], (err: Error | null, records: any) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    callback(records);
-  });
+export const insertData = (taskToInsert: string, callback: any) => {
+  const id = generateUniqueId();
+  const isMarked = false;
+
+  const newTask: Task = { id, task: taskToInsert, isMarked };
+  tasks.push(newTask);
+
+  updateJsonFile();
+  callback(null, newTask);
 };
 
 export const clearData = () => {
-  const clearQuery = `DELETE FROM myTable`;
-  db.run(clearQuery, [], (err: Error | null) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-  });
+  tasks = [];
+  updateJsonFile();
 };
 
-export const markUnmark = (id: string) => {
-  const markUnmarkQuery = `UPDATE myTable SET isMarked = NOT isMarked WHERE id = ?`;
-  db.run(markUnmarkQuery, [id], function (err: Error | null) {
-    if (err) {
-      console.error("Error toggling isMarked:", err.message);
-      return;
-    }
-  });
+export const deleteData = (toDelete: string) => {
+  tasks = tasks.filter((task) => task.id !== toDelete);
+  updateJsonFile();
 };
 
-export const deleteData = (id: string) => {
-  const deleteQuery = "DELETE FROM myTable WHERE id = ?";
-  db.run(deleteQuery, [id], (err: Error | null) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-  });
+export const editData = (id: string, updatedTask: string) => {
+  const taskIndex = tasks.findIndex((task) => task.id === id);
+
+  if (taskIndex !== -1) {
+    tasks[taskIndex].task = updatedTask;
+    updateJsonFile();
+  }
 };
 
-export const editData = (id: string, task: string) => {
-  const editQuery = `UPDATE myTable SET task = ? WHERE id = ?`;
-  db.run(editQuery, [task, id], (err: Error | null) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-  });
+export const markUnmark = (toMarkUnmark: string) => {
+  const taskIndex = tasks.findIndex((task) => task.id === toMarkUnmark);
+
+  if (taskIndex !== -1) {
+    tasks[taskIndex].isMarked = !tasks[taskIndex].isMarked;
+    updateJsonFile();
+  }
 };
