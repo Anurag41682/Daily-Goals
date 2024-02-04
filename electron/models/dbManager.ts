@@ -13,11 +13,11 @@ function generateUniqueId() {
 
 function updateJsonFile() {
   const jsonString = JSON.stringify(tasks, null, 2);
-  fs.writeFileSync("./electron/models/tasks.json", jsonString, "utf-8");
+  fs.writeFileSync("./tasks.json", jsonString, "utf-8");
 }
 
 export const fetchData = (callback: any) => {
-  const filePath = "./electron/models/tasks.json";
+  const filePath = "./tasks.json";
   // Check if the file exists
   if (fs.existsSync(filePath)) {
     const jsonContent = fs.readFileSync(filePath, "utf-8");
